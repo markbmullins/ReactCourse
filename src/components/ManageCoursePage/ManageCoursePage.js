@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TextInput from "../TextInput";
+import { saveCourse } from "../../api/courseApi";
 
 class ManageCoursePage extends Component {
   constructor(props) {
@@ -16,6 +17,10 @@ class ManageCoursePage extends Component {
       errors: {}
     };
   }
+
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  };
 
   handleFormChange = event => {
     const course = { ...this.state.course };
@@ -35,6 +40,10 @@ class ManageCoursePage extends Component {
       this.setState({ errors });
       return;
     }
+    debugger;
+    saveCourse(this.state.course).then(() => {
+      this.props.history.push("/courses");
+    });
   };
 
   render() {
@@ -73,7 +82,5 @@ class ManageCoursePage extends Component {
     );
   }
 }
-
-ManageCoursePage.propTypes = {};
 
 export default ManageCoursePage;
