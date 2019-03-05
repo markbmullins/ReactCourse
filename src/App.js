@@ -1,5 +1,6 @@
 import React from "react";
 import { getCourses, deleteCourse } from "./api/courseApi";
+import CourseTable from "./CourseTable";
 
 class App extends React.Component {
   constructor(props) {
@@ -7,48 +8,35 @@ class App extends React.Component {
     this.state = {
       courses: []
     };
+    //bind in constructor
+    //this.handleDelete = this.handleDelete.bind(this);
   }
   componentDidMount() {
     getCourses().then(courses => {
       this.setState({ courses });
     });
   }
-  handleDelete(courseId) {
+  handleDelete = courseId => {
     deleteCourse(courseId).then(() => {
       const courses = this.state.courses.filter(
         course => course.id !== courseId
       );
       this.setState({ courses });
     });
-  }
+  };
   render() {
     return (
       <>
         <h1>App</h1>
         <h2>Courses</h2>
-        <table>
-          <thead>
-            <th />
-            <th>Title</th>
-            <th>Author</th>
-            <th>Category</th>
-            <tr />
-          </thead>
-          <tbody>
-            {this.state.courses.map(course => (
-              <tr key={course.id}>
-                <td>
-                  <button onClick={event => this.handleDelete(course.id)}>
-                    Delete
-                  </button>
-                </td>
-                <td>{course.title}</td>
-                <td>{course.authorId}</td>
-                <td>{course.category}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {this.state.courses.length === 0 ? (
+          <p>No courses to display.</p>
+        ) : (
+          <CourseTable
+            courses={this.state.courses}
+            onClickDelete={this.handleDelete}
+          />
+        )}
       </>
     );
   }
