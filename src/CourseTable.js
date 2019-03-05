@@ -2,7 +2,7 @@ import React from "react";
 import { PropTypes } from "prop-types";
 import { course } from "./propTypes";
 
-function CourseTable(props) {
+function CourseTable({ courses, onClickDelete }) {
   return (
     <table>
       <thead>
@@ -14,10 +14,10 @@ function CourseTable(props) {
         </tr>
       </thead>
       <tbody>
-        {this.props.courses.map(course => (
+        {courses.map(course => (
           <tr key={course.id}>
             <td>
-              <button onClick={event => this.props.onClickDelete(course.id)}>
+              <button onClick={event => onClickDelete(course.id)}>
                 Delete
               </button>
             </td>
