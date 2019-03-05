@@ -10,9 +10,10 @@ class ManageCoursePage extends Component {
         id: null,
         title: "",
         category: "",
-        slug: null,
-        authorId: null
-      }
+        slug: "",
+        authorId: ""
+      },
+      errors: {}
     };
   }
 
@@ -23,18 +24,32 @@ class ManageCoursePage extends Component {
     this.setState({ course });
   };
 
+  handleSubmit = event => {
+    event.preventDefault();
+    const errors = {};
+    if (!this.state.course.title) errors.title = "Title is required";
+    if (!this.state.course.category) errors.category = "Category is required";
+    if (!this.state.course.authorId) errors.authorId = "Author is required";
+
+    if (Object.keys(errors)) {
+      this.setState({ errors });
+      return;
+    }
+  };
+
   render() {
     return (
       <div>
         <h1>ManageCourse</h1>
 
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <TextInput
             label="Title"
             id="title"
             name="title"
             onChange={this.handleFormChange}
             value={this.state.course.title}
+            error={this.state.errors.title}
           />
           <TextInput
             label="Category"
@@ -42,7 +57,17 @@ class ManageCoursePage extends Component {
             name="category"
             onChange={this.handleFormChange}
             value={this.state.course.category}
+            error={this.state.errors.category}
           />
+          <TextInput
+            label="Author"
+            id="author"
+            name="authorId"
+            onChange={this.handleFormChange}
+            value={this.state.course.authorId}
+            error={this.state.errors.authorId}
+          />
+          <button type="submit">Save Course</button>
         </form>
       </div>
     );
