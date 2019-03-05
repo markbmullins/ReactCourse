@@ -1,6 +1,6 @@
 import React from "react";
 import { PropTypes } from "prop-types";
-import { course } from "./propTypes";
+import { course } from "../../propTypes";
 
 function CourseTable({ courses, onClickDelete }) {
   return (
