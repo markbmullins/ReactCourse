@@ -7,7 +7,7 @@ import ManageCoursePage from "../ManageCoursePage";
 import PageNotFound from "../PageNotFound/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getCourses, deleteCourse } from "../../api/courseApi";
+import { getCourses, deleteCourse, saveCourse } from "../../api/courseApi";
 
 class App extends React.Component {
   state = {
@@ -32,9 +32,24 @@ class App extends React.Component {
   };
 
   handleSave = course => {
-    //update state to contain new course
-    const courses = [...this.state.courses, course];
-    this.setState({ courses });
+    saveCourse(course).then(savedCourse => {
+      let courses;
+      if (course.id) {
+        courses = this.state.courses.map(c => {
+          //The course that was jusr saved
+          if (c.id === course.id) {
+            return savedCourse;
+          } else {
+            return c;
+          }
+        });
+      } else {
+        //update state to contain new course
+        courses = [...this.state.courses, savedCourse];
+      }
+
+      this.setState({ courses });
+    });
   };
 
   render() {
@@ -73,6 +88,7 @@ class App extends React.Component {
               />
             )}
           />
+          <Route path="/404" component={PageNotFound} />
           <Route component={PageNotFound} />
         </Switch>
         <ToastContainer hideProgressBar />

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TextInput from "../TextInput";
-import { saveCourse } from "../../api/courseApi";
 import { toast } from "react-toastify";
 
 class ManageCoursePage extends Component {
@@ -18,7 +17,12 @@ class ManageCoursePage extends Component {
 
   componentDidMount() {
     const slug = this.props.match.params.slug;
+    //If editing instead of creating
     if (slug) {
+      const course = this.props.courses.find(course => course.slug === slug);
+      //If URL isn't valid
+      if (!course) this.props.history.push("/404");
+      this.setState({ course: { ...course } });
     }
   }
 
@@ -53,11 +57,15 @@ class ManageCoursePage extends Component {
       ...course,
       authorId: parseInt(course.authorId, 10)
     };
-    saveCourse(newCourse).then(savedCourse => {
-      this.props.onSave(savedCourse);
-      toast.success("Course Saved");
-      this.props.history.push("/courses");
-    });
+    this.props
+      .onSave(newCourse)
+      .then(() => {
+        this.props.history.push("/courses");
+        toast.success("Course Saved");
+      })
+      .catch(error => {
+        toast.error(error);
+      });
   };
 
   render() {
