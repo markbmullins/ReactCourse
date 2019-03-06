@@ -1,31 +1,19 @@
 import React from "react";
-import { getCourses, deleteCourse } from "../../api/courseApi";
 import CourseTable from "../CourseTable/";
 import { Redirect } from "react-router-dom";
+import { PropTypes } from "prop-types";
+import { course } from "../../propTypes";
 
 class CoursesPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      courses: [],
       redirectToAddCourse: false
     };
     //bind in constructor
     //this.handleDelete = this.handleDelete.bind(this);
   }
-  componentDidMount() {
-    getCourses().then(courses => {
-      this.setState({ courses });
-    });
-  }
-  handleDelete = courseId => {
-    deleteCourse(courseId).then(() => {
-      const courses = this.state.courses.filter(
-        course => course.id !== courseId
-      );
-      this.setState({ courses });
-    });
-  };
+
   handleClickAddCourse = () => {
     this.setState({ redirectToAddCourse: true });
   };
@@ -35,12 +23,12 @@ class CoursesPage extends React.Component {
         {this.state.redirectToAddCourse && <Redirect to="/course" />}
         <h1>Courses</h1>
         <button onClick={this.handleClickAddCourse}>Add Course</button>
-        {this.state.courses.length === 0 ? (
+        {this.props.courses.length === 0 ? (
           <p>No courses to display.</p>
         ) : (
           <CourseTable
-            courses={this.state.courses}
-            onClickDelete={this.handleDelete}
+            courses={this.props.courses}
+            onClickDelete={this.props.onDelete}
           />
         )}
       </>
@@ -48,4 +36,8 @@ class CoursesPage extends React.Component {
   }
 }
 
+CoursesPage.propTypes = {
+  courses: PropTypes.arrayOf(course).isRequired,
+  onDelete: PropTypes.func.isRequired
+};
 export default CoursesPage;

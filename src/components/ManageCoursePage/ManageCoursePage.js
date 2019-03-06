@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TextInput from "../TextInput";
 import { saveCourse } from "../../api/courseApi";
+import { toast } from "react-toastify";
 
 class ManageCoursePage extends Component {
   state = {
@@ -14,6 +15,12 @@ class ManageCoursePage extends Component {
     },
     errors: {}
   };
+
+  componentDidMount() {
+    const slug = this.props.match.params.slug;
+    if (slug) {
+    }
+  }
 
   static propTypes = {
     history: PropTypes.object.isRequired
@@ -46,7 +53,9 @@ class ManageCoursePage extends Component {
       ...course,
       authorId: parseInt(course.authorId, 10)
     };
-    saveCourse(newCourse).then(() => {
+    saveCourse(newCourse).then(savedCourse => {
+      this.props.onSave(savedCourse);
+      toast.success("Course Saved");
       this.props.history.push("/courses");
     });
   };
