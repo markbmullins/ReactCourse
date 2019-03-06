@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import TextInput from "../TextInput";
 import { toast } from "react-toastify";
+import Spinner from "../Spinner";
 
 class ManageCoursePage extends Component {
   state = {
@@ -15,20 +16,20 @@ class ManageCoursePage extends Component {
     errors: {}
   };
 
+  static propTypes = {
+    history: PropTypes.object.isRequired,
+    onSave: PropTypes.func.isRequired
+  };
+
   componentDidMount() {
     const slug = this.props.match.params.slug;
-    //If editing instead of creating
-    if (slug) {
+    if (slug && this.props.courses.length > 0) {
+      // So we're editing an existing course
       const course = this.props.courses.find(course => course.slug === slug);
-      //If URL isn't valid
       if (!course) this.props.history.push("/404");
       this.setState({ course: { ...course } });
     }
   }
-
-  static propTypes = {
-    history: PropTypes.object.isRequired
-  };
 
   handleChange = event => {
     const course = { ...this.state.course };
@@ -45,7 +46,7 @@ class ManageCoursePage extends Component {
     if (!course.title) errors.title = "Title is required.";
     if (!course.category) errors.category = "Category is required.";
     if (!course.authorId || isNaN(course.authorId))
-      errors.authorId = "Author is required and must be a number.";
+      errors.authorId = "Author ID must be a number.";
 
     // Is there at least one property on the errors object? If so, validation failed.
     if (Object.keys(errors).length > 0) {
@@ -57,19 +58,21 @@ class ManageCoursePage extends Component {
       ...course,
       authorId: parseInt(course.authorId, 10)
     };
+
     this.props
       .onSave(newCourse)
       .then(() => {
+        toast.success("🦄Course saved!");
         this.props.history.push("/courses");
-        toast.success("Course Saved");
       })
       .catch(error => {
-        toast.error(error);
+        toast.error("Oops! Save failed. Please try again.  ¯\\_(ツ)_/¯");
       });
   };
 
   render() {
     const { course, errors } = this.state;
+    if (this.props.courses.length === 0) return <Spinner />;
     return (
       <div>
         <h1>Manage Course</h1>

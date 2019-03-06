@@ -14,14 +14,13 @@ class App extends React.Component {
     courses: []
   };
 
-  //IDEA: Do API Calls in Courses Page and Manage Course Page
-  //But set courses stae in App component
   componentDidMount() {
     getCourses().then(courses => {
       this.setState({ courses });
     });
   }
 
+  // Experimental class field / class property
   handleDelete = courseId => {
     deleteCourse(courseId).then(() => {
       const courses = this.state.courses.filter(
@@ -32,22 +31,22 @@ class App extends React.Component {
   };
 
   handleSave = course => {
-    saveCourse(course).then(savedCourse => {
+    return saveCourse(course).then(savedCourse => {
       let courses;
       if (course.id) {
+        // okay, i must be editing because the ID is populated
         courses = this.state.courses.map(c => {
-          //The course that was jusr saved
           if (c.id === course.id) {
+            // so this is the course that was just saved
             return savedCourse;
           } else {
             return c;
           }
         });
       } else {
-        //update state to contain new course
+        // update the state array to contain the new course
         courses = [...this.state.courses, savedCourse];
       }
-
       this.setState({ courses });
     });
   };
@@ -70,8 +69,10 @@ class App extends React.Component {
           />
           <Route
             path="/course/:slug"
+            // When key changes, ManageCoursePage will be re-mounted, and componentDidMount will thus re-run
             render={props => (
               <ManageCoursePage
+                key={this.state.courses.length}
                 {...props}
                 courses={this.state.courses}
                 onSave={this.handleSave}
@@ -79,7 +80,7 @@ class App extends React.Component {
             )}
           />
           <Route
-            path="/course"
+            path="/course/"
             render={props => (
               <ManageCoursePage
                 {...props}
