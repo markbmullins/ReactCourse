@@ -1,39 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import CourseTable from "../CourseTable/";
 import { Redirect } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { course } from "../../propTypes";
 
-class CoursesPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      redirectToAddCourse: false
-    };
-    //bind in constructor
-    //this.handleDelete = this.handleDelete.bind(this);
+function CoursesPage(props) {
+  const [redirectToAddCourse, setRedirectToAddCourse] = useState(false);
+
+  function handleClickAddCourse() {
+    setRedirectToAddCourse(true);
   }
 
-  handleClickAddCourse = () => {
-    this.setState({ redirectToAddCourse: true });
-  };
-  render() {
-    return (
-      <>
-        {this.state.redirectToAddCourse && <Redirect to="/course" />}
-        <h1>Courses</h1>
-        <button onClick={this.handleClickAddCourse}>Add Course</button>
-        {this.props.courses.length === 0 ? (
-          <p>No courses to display.</p>
-        ) : (
-          <CourseTable
-            courses={this.props.courses}
-            onClickDelete={this.props.onDelete}
-          />
-        )}
-      </>
-    );
-  }
+  return (
+    <>
+      {redirectToAddCourse && <Redirect to="/course" />}
+      <h1>Courses</h1>
+      <button onClick={handleClickAddCourse}>Add Course</button>
+      {props.courses.length === 0 ? (
+        <p>No courses to display.</p>
+      ) : (
+        <CourseTable courses={props.courses} onClickDelete={props.onDelete} />
+      )}
+    </>
+  );
 }
 
 CoursesPage.propTypes = {
