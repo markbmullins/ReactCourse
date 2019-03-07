@@ -58,9 +58,8 @@ function ManageCoursePage(props) {
       ...course,
       authorId: parseInt(course.authorId, 10)
     };
-
     props
-      .onSave(newCourse)
+      .dispatch(courseActions.saveCourse(newCourse))
       .then(() => {
         toast.success("🦄Course saved!");
         props.history.push("/courses");
@@ -109,8 +108,7 @@ function ManageCoursePage(props) {
 }
 
 ManageCoursePage.propTypes = {
-  history: PropTypes.object.isRequired,
-  onSave: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
