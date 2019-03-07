@@ -17,6 +17,10 @@ function createCourseSuccess(course) {
   return { type: types.CREATE_COURSE_SUCCESS, course };
 }
 
+function deleteCourseOptimistic(course) {
+  return { type: types.DELETE_COURSE_OPTIMISTIC, course };
+}
+
 //Thunk:
 export function loadCourses() {
   return function(dispatch) {
@@ -36,4 +40,12 @@ export function saveCourse(course) {
         : dispatch(createCourseSuccess(savedCourse));
     });
   };
+}
+
+//Thunk:
+export function deleteCourse(course) {
+  return function(dispatch) {
+    dispatch(deleteCourseOptimistic(course));
+    return courseApi.deleteCourse(course.id);
+  }; //TODO:  handle errors
 }

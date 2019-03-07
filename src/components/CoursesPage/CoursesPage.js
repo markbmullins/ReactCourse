@@ -5,6 +5,7 @@ import { PropTypes } from "prop-types";
 import { course } from "../../propTypes";
 import { connect } from "react-redux";
 import * as courseActions from "../../redux/actions/courseActions";
+import { toast } from "react-toastify";
 
 function CoursesPage(props) {
   const [redirectToAddCourse, setRedirectToAddCourse] = useState(false);
@@ -19,6 +20,12 @@ function CoursesPage(props) {
     setRedirectToAddCourse(true);
   }
 
+  // Experimental class field / class property
+  function handleDelete(course) {
+    props.dispatch(courseActions.deleteCourse(course));
+    toast.success("Course deleted");
+  }
+
   return (
     <>
       {redirectToAddCourse && <Redirect to="/course" />}
@@ -27,15 +34,14 @@ function CoursesPage(props) {
       {props.courses.length === 0 ? (
         <p>No courses to display.</p>
       ) : (
-        <CourseTable courses={props.courses} onClickDelete={props.onDelete} />
+        <CourseTable courses={props.courses} onClickDelete={handleDelete} />
       )}
     </>
   );
 }
 
 CoursesPage.propTypes = {
-  courses: PropTypes.arrayOf(course).isRequired,
-  onDelete: PropTypes.func.isRequired
+  courses: PropTypes.arrayOf(course).isRequired
 };
 
 //argument state is current state of redux store

@@ -18,9 +18,7 @@ function CourseTable({ courses, onClickDelete }) {
         {courses.map(course => (
           <tr key={course.id}>
             <td>
-              <button onClick={event => onClickDelete(course.id)}>
-                Delete
-              </button>
+              <button onClick={event => onClickDelete(course)}>Delete</button>
             </td>
             <td>
               <Link to={"/course/" + course.slug}> {course.title}</Link>
