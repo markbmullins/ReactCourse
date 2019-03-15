@@ -1,3 +1,8 @@
+# ReactJs Consulting Course
+
+This app was created during the react course with Cory House. During this course we covered React fundamentals including state, props, lifting state, PropTypes. We also covered an introduction to Redux and React Context.
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
